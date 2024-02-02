@@ -111,7 +111,7 @@ if st.session_state.current_question < len(questions):
         submitted = st.form_submit_button('Next', on_click=handle_next)
         
        if submitted:
-        if st.session_state.current_question < len(questions_and_options) - 1:
+            if st.session_state.current_question < len(questions_and_options) - 1:
             # Move to the next question
             st.session_state.current_question += 1
         else:
