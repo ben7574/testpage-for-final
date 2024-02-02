@@ -61,10 +61,24 @@ options = {
 
 }
 
-# Function to calculate the working style score
-def calculate_raisec_score(answers):
-    total_score = sum(answers)  # Sum the values of the answers
-    return total_score
+#To asign value to each of theoptions
+raisec_style = {
+    1: "R",
+    2: "A",
+    3: "I",
+    4: "S",
+    5: "E",
+    6: "C"
+}
+
+# Function to calculate the RAISEC score
+def calculate_raisec_style(answers):
+    results = {"R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0}
+    for answer in answers:
+        # Directly map answer to learning style
+        if answer in raisec_style:
+            results[raisec_style[answer]] += 1
+    return results
 
 # Initialize session state
 st.session_state.setdefault('current_question', 0)
@@ -96,29 +110,41 @@ if st.session_state.current_question < len(questions):
         )
         submitted = st.form_submit_button('Next', on_click=handle_next)
         
-        if submitted:
-            # Store the answer
-            st.session_state.answers[st.session_state.current_question] = answer
+       if submitted:
+        if st.session_state.current_question < len(questions_and_options) - 1:
+            # Move to the next question
+            st.session_state.current_question += 1
+        else:
+            # Calculate and display the results after the last question
+            result = calculate_learning_style(st.session_state.answers)
+            st.subheader("Your Learning Style Preferences:")
+            for style, count in result.items():
+                st.write(f"{style}: {count}")
 
-# Function to display results
-def display_results():
-    score = calculate_raisec_score(st.session_state.answers)
-    st.subheader("Your RAISEC Score:")
-    st.write(score)
-    
-    # Display the unique message based on the score
-    message = get_message_for_score(score)
-    st.subheader("Your RAISEC SCORE:")
-    st.write(message)
+            # Sort the learning styles by count in descending order
+            sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
 
-# Check if all questions have been answered and show the results
-if st.session_state.current_question == len(questions):
-    display_results()
+            # Extract the top two learning styles
+            top_style = sorted_styles[0]
+            second_top_style = sorted_styles[1]
+            third_top_style = sorted_styles[2]
+
+            # Display a custom message based on the highest and second-highest learning styles
+            message = f"You have the highest count in {top_style[0]} learning, Second in ({top_style[1]} and Third in ({top_style[2]}})counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
+            
+            # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
+            # For example:
+            if top_style[0] == "Visual" and second_top_style[0] == "Aural":
+                message += " This combination is suitable for careers that involve visual and auditory skills, such as graphic design or music production."
+            # Add more conditions as needed for other combinations
+
+            st.subheader("Custom Career Advice Based on RAISEC TEST:")
+            st.write(message)
 
 # Function to get a unique message based on the total score
-def get_message_for_score(score):
+def get_message_for_score(top_style[]):
     if score <= 35:
-        return "Your working style is highly independent and proactive."
+        return "Your  style is highly independent and proactive."
     elif score <= 70:
         return "Your working style is independent with a preference for occasional collaboration."
     elif score <= 105:
