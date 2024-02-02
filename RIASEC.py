@@ -34,7 +34,7 @@ questions = [
     "I like to cook",
     "I like acting in plays",
     "I am a practical",
-    "I like working with numbers or charts"
+    "I like working with numbers or charts",
     "I like to get into discussions about issues",
     "I am good at keeping records of my work",
     "I like to lead",
@@ -44,11 +44,7 @@ questions = [
     "I like helping people",
     "I like to draw",
     "I like to give speeches"
-
 ]
-
-# Questions
-# ... (Your questions list here)
 
 # Options (the same for each question)
 options = {
@@ -58,10 +54,9 @@ options = {
     4: "Somewhat Disagree", 
     5: "Disagree",
     6: "Strongly Disagree"
-
 }
 
-#To asign value to each of theoptions
+# To assign a value to each of the options
 raisec_style = {
     1: "R",
     2: "A",
@@ -93,7 +88,6 @@ def handle_next():
         # Display results if it's the last question
         display_results()
 
-
 # Title of the app
 st.title('RAISEC Assessment')
 
@@ -110,41 +104,40 @@ if st.session_state.current_question < len(questions):
         )
         submitted = st.form_submit_button('Next', on_click=handle_next)
         
-       if submitted:
-            if st.session_state.current_question < len(questions_and_options) - 1:
-            # Move to the next question
-            st.session_state.current_question += 1
-        else:
-            # Calculate and display the results after the last question
-            result = calculate_learning_style(st.session_state.answers)
-            st.subheader("Your Learning Style Preferences:")
-            for style, count in result.items():
-                st.write(f"{style}: {count}")
+        if submitted:
+            if st.session_state.current_question < len(questions) - 1:
+                # Move to the next question
+                st.session_state.current_question += 1
+            else:
+                # Calculate and display the results after the last question
+                result = calculate_raisec_style(st.session_state.answers)
+                st.subheader("Your Learning Style Preferences:")
+                for style, count in result.items():
+                    st.write(f"{style}: {count}")
 
-            # Sort the learning styles by count in descending order
-            sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
+                # Sort the learning styles by count in descending order
+                sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
 
-            # Extract the top two learning styles
-            top_style = sorted_styles[0]
-            second_top_style = sorted_styles[1]
-            third_top_style = sorted_styles[2]
+                # Extract the top two learning styles
+                top_style = sorted_styles[0]
+                second_top_style = sorted_styles[1]
 
-            # Display a custom message based on the highest and second-highest learning styles
-            message = f"You have the highest count in {top_style[0]} learning, Second in ({top_style[1]} and Third in ({top_style[2]}})counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
-            
-            # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
-            # For example:
-            if top_style[0] == "Visual" and second_top_style[0] == "Aural":
-                message += " This combination is suitable for careers that involve visual and auditory skills, such as graphic design or music production."
-            # Add more conditions as needed for other combinations
+                # Display a custom message based on the highest and second-highest learning styles
+                message = f"You have the highest count in {top_style[0]} learning ({top_style[1]} counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
+                
+                # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
+                # For example:
+                if top_style[0] == "Visual" and second_top_style[0] == "Aural":
+                    message += " This combination is suitable for careers that involve visual and auditory skills, such as graphic design or music production."
+                # Add more conditions as needed for other combinations
 
-            st.subheader("Custom Career Advice Based on RAISEC TEST:")
-            st.write(message)
+                st.subheader("Custom Career Advice Based on RAISEC TEST:")
+                st.write(message)
 
 # Function to get a unique message based on the total score
-def get_message_for_score(top_style[]):
+def get_message_for_score(score):
     if score <= 35:
-        return "Your  style is highly independent and proactive."
+        return "Your style is highly independent and proactive."
     elif score <= 70:
         return "Your working style is independent with a preference for occasional collaboration."
     elif score <= 105:
@@ -154,4 +147,4 @@ def get_message_for_score(top_style[]):
     elif score <= 175:
         return "Your working style is highly collaborative, preferring teamwork over working alone."
     else:
-        return "Unique message for your score range or an error message if the score is out of expected range."
+        return "Unique message for your score range or an error message if the score is out of the expected range."
