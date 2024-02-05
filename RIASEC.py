@@ -101,7 +101,7 @@ if submitted:
         # Define specific messages for combinations of top 3 RAISEC categories
         combination_messages = {
             ('R', 'A', 'I'): "Message for combination R, A, I.",
-            ('R','none','none') "you are part of society R"
+            ('R','none','none'): "you are part of society R",
             # Define other combinations and their messages as needed
             # You can also define messages for single or two-category combinations
         }
