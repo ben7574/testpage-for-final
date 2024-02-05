@@ -108,8 +108,8 @@ if st.session_state.current_question < len(
     #elif score <= 105:
      #   return "Your working style balances independence and teamwork."
     #elif score <= 140:
-        return "Your working style leans towards collaboration, with some preference for independence."
-    elif score <= 175:
-        return "Your working style is highly collaborative, preferring teamwork over working alone."
-    else:
-        return "Unique message for your score range or an error message if the score is out of expected range."
+    #    return "Your working style leans towards collaboration, with some preference for independence."
+    #elif score <= 175:
+     #   return "Your working style is highly collaborative, preferring teamwork over working alone."
+    #else:
+     #   return "Unique message for your score range or an error message if the score is out of expected range."
