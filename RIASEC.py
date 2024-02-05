@@ -70,7 +70,7 @@ raisec_style = {
 def calculate_raisec_style(answers):
     results = {"R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0}
     for answer in answers:
-        # Directly map answer to learning style
+        # Directly map answer to RAISEC test
         if answer in raisec_style:
             results[raisec_style[answer]] += 1
     return results
@@ -111,60 +111,25 @@ if st.session_state.current_question < len(questions):
             else:
                 # Calculate and display the results after the last question
                 result = calculate_raisec_style(st.session_state.answers)
-                st.subheader("Your Learning Style Preferences:")
+                st.subheader("Your RAISEC result:")
                 for style, count in result.items():
                     st.write(f"{style}: {count}")
 
-                # Sort the learning styles by count in descending order
+                # Sort the RAISEC styles by count in descending order
                 sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
 
-                # Extract the top two learning styles
-                top_style = sorted_styles[0]
-                second_top_style = sorted_styles[1]
+                # Extract the top three RAISEC styles
+                top_styles = sorted_styles[:3]
 
-                def display_results():
-    result = calculate_raisec_style(st.session_state.answers)
-    st.subheader("Your RIASEC result:")
-    for style, count in result.items():
-        st.write(f"{style}: {count}")
-
-    sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
-    top_style = sorted_styles[0]
-    second_top_style = sorted_styles[1]
-
-    message = f"You have the highest count in {top_style[0]} learning ({top_style[1]} counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
-    
-    if top_style[0] == "Visual" and second_top_style[0] == "Aural":
-        message += " This combination is suitable for careers that involve visual and auditory skills, such as graphic design or music production."
-    
-    st.subheader("Custom Career Advice Based on RAISEC TEST:")
-    st.write(message)
-
-                # Display a custom message based on the highest and second-highest learning styles
-                message = f"You have the highest count in {top_style[0]} learning ({top_style[1]} counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
+                message = f"You have the highest counts in: {', '.join([f'{style[0]} ({style[1]} counts)' for style in top_styles])}."
                 
-                # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
-                # For example:
-                if top_style[0] == "Visual" and second_top_style[0] == "Aural":
-                    message += " This combination is suitable for careers that involve visual and auditory skills, such as graphic design or music production."
                 # Add more conditions as needed for other combinations
 
                 st.subheader("Custom Career Advice Based on RAISEC TEST:")
                 st.write(message)
 
-# Function to get a unique message based on the total score
-def get_message_for_score(score):
-    if score <= R:
-        return "Your style is highly independent and proactive."
-    elif score <= A:
-        return "Your working style is independent with a preference for occasional collaboration."
-    elif score <= I:
-        return "Your working style balances independence and teamwork."
-    elif score <= S:
-        return "Your working style leans towards collaboration, with some preference for independence."
-    elif score <= E:
-        return "Your working style is highly collaborative, preferring teamwork over working alone."
-    elif score <= C:
-        return "Your working style is highly collaborative, preferring teamwork over working alone."
-    else:
-        return "Unique message for your score range or an error message if the score is out of the expected range."
+# Function to get a unique message based on the RAISEC test result
+def get_message_for_score(top_styles):
+    # Customize the message based on the top RAISEC styles
+    message = "Custom message based on the top RAISEC styles."
+    return message
