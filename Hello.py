@@ -39,10 +39,7 @@ options = {
     6: "Usually typical of you",
     7: "Very typical of you at work"
 }
-
-import streamlit as st
-
-# ... [Other parts of your code] ...
+# Define your questions, options, and other constants here
 
 # Initialize session state
 if 'current_question' not in st.session_state:
@@ -50,18 +47,15 @@ if 'current_question' not in st.session_state:
 if 'answers' not in st.session_state:
     st.session_state.answers = [0] * len(questions)
 
-# Title of the app
 st.title('Working Style Assessment')
 
 # Display the current question
 if st.session_state.current_question < len(questions):
     question = questions[st.session_state.current_question]
+    st.write(f"Question {st.session_state.current_question + 1}/{len(questions)}: {question}")
     form_key = f'question_form_{st.session_state.current_question}'  # Unique key for each form
     with st.form(key=form_key):
-        st.write(question)
-        # Display the options as radio buttons
         selected_option = st.radio("Select an option:", list(options.values()), key=f'option_{st.session_state.current_question}')
-        # When the 'Next' button is clicked, the form is submitted
         submitted = st.form_submit_button('Next')
         if submitted:
             # Save the selected option's score (assuming the options are 1-indexed)
@@ -81,8 +75,7 @@ if st.session_state.current_question < len(questions):
                 # Display the custom message based on the best style
                 # ... [Your logic for displaying the custom message]
 
-# ... [Rest of your code] ...
-
+# No need to call display_question() at the end
 
 # Function to display results
 def display_results():
