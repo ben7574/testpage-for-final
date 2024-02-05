@@ -1,117 +1,109 @@
 import streamlit as st
+from collections import Counter
 
-def analyze_responses(responses):
-    working_styles = {
-        "Autonomous Style": [0, 0, 0, 0, 0],
-        "Supportive Style": [0, 0, 0, 0, 0],
-        "Directive Style": [0, 0, 0, 0, 0],
-        "Conceptual Style": [0, 0, 0, 0, 0],
-        "Social Style": [0, 0, 0, 0, 0],
-        "Structural Style": [0, 0, 0, 0, 0],
-        "Analytical Style": [0, 0, 0, 0, 0]
-    }
+questions = [
+    "I prefer to work by myself most of the time.",
+    "By choice I start new tasks whilst I have yet to complete others.",
+    "I tire of meetings that go on too long, for example for more than an hour.",
+    "When I chat with colleagues it is about their families and home life.",
+    "It is when there is a crisis that I manage best.",
+    "For meetings I arrive either just in time or slightly late.",
+    "I take accurate notice of the details.",
+    "I think that you have to be tough and resilient to survive in this world.",
+    "I enjoy the prospect of starting new projects or tasks.",
+    "I find it hard to say no if a colleague or manager asks me to do something I do not want to do.",
+    "I often find that I have left some preparations to the last minute.",
+    "I regularly make more than one draft of my letters or reports before submitting them.",
+    "I have a fast work rate.",
+    "The well-being of acquaintances in work concerns me.",
+    "I often choose to do more than one thing at a time.",
+    "I am not particularly concerned with being popular.",
+    "I become interested when hearing what work others are involved in.",
+    "I actively involve myself so that people enjoy work.",
+    "I could be described as a perfectionist.",
+    "It is important that I am popular with most people.",
+    "My work pattern shows me working fastest as time-scales are due.",
+    "I like to have a number of projects on the go at any one time.",
+    "I think that it is important to keep my feelings to myself.",
+    "I make sure that I have crossed all the ’t’s and dotted all the 'i's.",
+    "I produce work with no mistakes in it."
+]
 
-    for response in responses:
-        for i in range(len(response)):
-            working_styles[list(working_styles.keys())[i]][response[i]] += 1
+# Options (the same for each question)
+options = {
+    1: "Not at all typical of you",
+    2: "Rarely typical of you",
+    3: "Occasionally typical of you",
+    4: "Sometimes typical of you",
+    5: "Often typical of you",
+    6: "Usually typical of you",
+    7: "Very typical of you at work"
+}
 
-    total_scores = {}
-    for style, scores in working_styles.items():
-        total_scores[style] = sum(scores)
+# Initialize session state
+st.session_state.setdefault('current_question', 0)
+st.session_state.setdefault('answers', [0] * len(questions))
 
-    best_style = max(total_scores, key=total_scores.get)
+# Title of the app
+st.title('Working Style Assessment')
 
-    return total_scores, best_style
+# Function to calculate the working style score
+def calculate_working_style_score(answers):
+    total_score = sum(answers)  
+    # Sum the values of the answers
+    return total_score
 
-def display_question(question):
-    return st.radio("Question:", ["Not at all typical of you",
-                                  "Rarely typical of you",
-                                  "Occasionally typical of you",
-                                  "Sometimes typical of you",
-                                  "Often typical of you",
-                                  "Usually typical of you",
-                                  "Very typical of you at work"], index=3)
+# Define a callback function to handle the "Next" button click
+def handle_next():
+    # Increment the current question index or calculate and display the results
+    if st.session_state.current_question < len(questions) - 1:
+        st.session_state.current_question += 1
+        display_question()
+    else:
+        # All questions answered, calculate and display the results
+        display_results()
 
-def main():
-    st.title("Working Style Questionnaire")
+# Function to display the current question
+def display_question():
+    question = questions[st.session_state.current_question]
+    # Generate a unique key for the form using the current question index
+    form_key = f'question_{st.session_state.current_question}'
+    # Display the question and radio buttons for options
+    with st.form(key=form_key):
+        answer = st.radio(question, list(options.keys()), format_func=lambda x: options[x])
+        submitted = st.form_submit_button('Next', on_click=handle_next)
+        if submitted:
+            # Store the selected answer
+            st.session_state.answers[st.session_state.current_question] = answer
 
-    st.write("Complete this questionnaire to gain an indication of your working style.")
-    st.write("Score each of the following statements on a scale of 0 to 6 where:")
-    st.write("0 is 'Not at all typical of you'")
-    st.write("6 is 'Very typical of you at work'")
-    st.write("There is no right or wrong answer. Use the full extent of the scale, answer each question honestly and as you feel or see yourself at work.")
+# Function to display results
+def display_results():
+    score = calculate_working_style_score(st.session_state.answers)
+    st.subheader("Your Working Style Score:")
+    st.write(score)
+    
+    # Display the unique message based on the score
+    message = get_message_for_score(score)
+    st.subheader("Your Working Style:")
+    st.write(message)
 
-    questions = [
-        "How do you approach working independently on projects or tasks?",
-        "How do you set goals and objectives for yourself?",
-        "How do you prioritize your tasks and manage your workload?",
-        "How do you handle challenges or obstacles when working independently?",
-        "How do you stay motivated and committed to achieving your goals?",
-        "How do you offer support and encouragement to your peers?",
-        "How do you respond when someone asks for help or assistance?",
-        "How do you contribute to a positive and inclusive team environment?",
-        "How do you handle feedback or constructive criticism from others?",
-        "How do you prioritize the well-being and needs of others in your team or group?",
-        "How do you take charge in group settings or team projects?",
-        "How do you set goals and objectives for yourself or others?",
-        "How do you make decisions when faced with uncertainty or ambiguity?",
-        "How do you motivate yourself and others to achieve goals?",
-        "How do you handle challenges or setbacks in your projects or tasks?",
-        "How do you approach solving creative or open-ended problems?",
-        "How do you respond to unexpected changes or disruptions?",
-        "How do you generate new ideas or approaches to tasks?",
-        "How do you handle ambiguity or uncertainty?",
-        "How do you approach projects or tasks that require outside-the-box thinking?",
-        "How do you collaborate with peers on group projects?",
-        "How do you handle conflicts or disagreements with peers?",
-        "How do you build relationships with classmates or colleagues?",
-        "How do you communicate your ideas or thoughts to others?",
-        "How do you contribute to group discussions or activities?",
-        "How do you organize your tasks or assignments?",
-        "How do you manage your time effectively?",
-        "How do you handle multiple tasks or projects simultaneously?",
-        "How do you ensure your work is thorough and accurate?",
-        "How do you approach long-term assignments or projects?",
-        "How do you approach solving a problem?",
-        "How do you feel about working with data or numbers?",
-        "How do you handle complex tasks or assignments?",
-        "When making decisions, what is your approach?",
-        "How do you respond to challenges or obstacles?"
-    ]
+# Check if all questions have been answered and show the results
+if st.session_state.current_question < len(questions):
+    display_question()
+else:
+    display_results()
 
-    responses = []
-
-    for i in range(len(questions)):
-        st.write(f"Question {i+1}/{len(questions)}")
-        response = display_question(questions[i])
-        responses.append(response)
-
-    st.write("Thank you for completing the questionnaire!")
-
-    total_scores, best_style = analyze_responses([responses])
-
-    st.write("### Total Scores:")
-    for style, score in total_scores.items():
-        st.write(f"- {style}: {score}")
-
-    st.write("### Best Working Style:")
-    st.write(f"The best working style for you is: **{best_style}**")
-
-    # Custom message based on the best style
-    if best_style == "Autonomous Style":
-        st.write("You have a strong tendency towards working independently and taking ownership of your tasks and goals. You prefer to set your own pace and direction.")
-    elif best_style == "Supportive Style":
-        st.write("You excel in supporting and collaborating with others, valuing teamwork and cooperation. You prioritize building positive relationships and helping your peers.")
-    elif best_style == "Directive Style":
-        st.write("You have a directive approach, taking charge and setting clear goals. You prefer to make decisions and guide others towards achieving objectives.")
-    elif best_style == "Conceptual Style":
-        st.write("You thrive in creative and innovative environments, enjoying problem-solving and exploring new ideas. You are adaptable and open-minded.")
-    elif best_style == "Social Style":
-        st.write("You excel in social interactions and teamwork, valuing collaboration and communication. You prioritize building strong relationships and contributing to group dynamics.")
-    elif best_style == "Structural Style":
-        st.write("You have strong organizational and time management skills, preferring structure and order in your work. You prioritize efficiency and thoroughness.")
-    elif best_style == "Analytical Style":
-        st.write("You have a logical and analytical approach, valuing data-driven decision-making and problem-solving. You prefer to analyze information and consider multiple perspectives.")
-
-if __name__ == "__main__":
-    main()
+# Function to get a unique message based on the total score
+def get_message_for_score(score):
+    if score <= 35:
+        return "Your working style is highly independent and proactive."
+    elif score <= 70:
+        return "Your working style is independent with a preference for occasional collaboration."
+    elif score <= 105:
+        return "Your working style balances independence and teamwork."
+    elif score <= 140:
+        return "Your working style leans towards collaboration, with some preference for independence."
+    elif score <= 175:
+        return "Your working style is highly collaborative, preferring teamwork over working alone."
+    else:
+        return "Unique message for your score range or an error message if the score is out of expected range."
