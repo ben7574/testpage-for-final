@@ -62,18 +62,25 @@ def handle_next():
         # All questions answered, calculate and display the results
         display_results()
 
+# Use st.empty() to create placeholders for your question and form
+question_placeholder = st.empty()
+form_placeholder = st.empty()
+
 # Function to display the current question
 def display_question():
     question = questions[st.session_state.current_question]
+    question_placeholder.markdown(question)  # Use the placeholder to display the question
     # Generate a unique key for the form using the current question index
     form_key = f'question_{st.session_state.current_question}'
-    # Display the question and radio buttons for options
-    with st.form(key=form_key):
-        answer = st.radio(question, list(options.keys()), format_func=lambda x: options[x])
-        submitted = st.form_submit_button('Next', on_click=handle_next)
+    
+    # Display the radio buttons for options using the form placeholder
+    with form_placeholder.form(key=form_key):
+        answer = st.radio("", list(options.keys()), format_func=lambda x: options[x])
+        submitted = st.form_submit_button('Next')
         if submitted:
             # Store the selected answer
             st.session_state.answers[st.session_state.current_question] = answer
+            handle_next()
 
 # Function to display results
 def display_results():
