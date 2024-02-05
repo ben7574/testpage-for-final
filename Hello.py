@@ -94,9 +94,9 @@ def display_results():
     message = get_message_for_score(score)
     st.subheader("Your Working Style:")
     st.write(message)
-
+    st.stop()
 # Check if all questions have been answered and show the results
-if st.session_state.current_question < len(
+#if st.session_state.current_question < len(
 
 
 # Function to get a unique message based on the total score
