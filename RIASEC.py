@@ -122,6 +122,24 @@ if st.session_state.current_question < len(questions):
                 top_style = sorted_styles[0]
                 second_top_style = sorted_styles[1]
 
+                def display_results():
+    result = calculate_raisec_style(st.session_state.answers)
+    st.subheader("Your RIASEC result:")
+    for style, count in result.items():
+        st.write(f"{style}: {count}")
+
+    sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
+    top_style = sorted_styles[0]
+    second_top_style = sorted_styles[1]
+
+    message = f"You have the highest count in {top_style[0]} learning ({top_style[1]} counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
+    
+    if top_style[0] == "Visual" and second_top_style[0] == "Aural":
+        message += " This combination is suitable for careers that involve visual and auditory skills, such as graphic design or music production."
+    
+    st.subheader("Custom Career Advice Based on RAISEC TEST:")
+    st.write(message)
+
                 # Display a custom message based on the highest and second-highest learning styles
                 message = f"You have the highest count in {top_style[0]} learning ({top_style[1]} counts) and the second-highest in {second_top_style[0]} learning ({second_top_style[1]} counts)."
                 
@@ -136,15 +154,17 @@ if st.session_state.current_question < len(questions):
 
 # Function to get a unique message based on the total score
 def get_message_for_score(score):
-    if score <= 35:
+    if score <= R:
         return "Your style is highly independent and proactive."
-    elif score <= 70:
+    elif score <= A:
         return "Your working style is independent with a preference for occasional collaboration."
-    elif score <= 105:
+    elif score <= I:
         return "Your working style balances independence and teamwork."
-    elif score <= 140:
+    elif score <= S:
         return "Your working style leans towards collaboration, with some preference for independence."
-    elif score <= 175:
+    elif score <= E:
+        return "Your working style is highly collaborative, preferring teamwork over working alone."
+    elif score <= C:
         return "Your working style is highly collaborative, preferring teamwork over working alone."
     else:
         return "Unique message for your score range or an error message if the score is out of the expected range."
