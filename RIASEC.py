@@ -76,44 +76,47 @@ with st.form(key=f'question_{st.session_state.current_question}'):
     choice = st.radio(question, options)
     submitted = st.form_submit_button('Next')
 
-    if submitted:
-        # Record the answer
-        st.session_state.answers.append(option_to_raisec[choice])
+if submitted:
+    # Record the answer
+    st.session_state.answers.append(option_to_raisec[choice])
 
-        if st.session_state.current_question < len(questions) - 1:
-            # Move to the next question
-            st.session_state.current_question += 1
+    if st.session_state.current_question < len(questions) - 1:
+        # Move to the next question
+        st.session_state.current_question += 1
+        st.experimental_rerun()
+    else:
+        # All questions answered, calculate and display the results
+        counts = Counter(st.session_state.answers)
+        most_common = counts.most_common(3)
+
+        # Ensure there are always three categories (pad with 'none' if less than three)
+        most_common += [(None, None)] * (3 - len(most_common))
+
+        # Display the most common RAISEC categories
+        st.subheader("Your Top 3 RAISEC Categories:")
+        for category, count in most_common:
+            if category:
+                st.write(f"{category}: {count}")
+
+        # Define specific messages for combinations of top 3 RAISEC categories
+        combination_messages = {
+            ('R', 'A', 'I'): "Message for combination R, A, I.",
+            ('R', 'none', 'none'): "You are part of society R",
+            # Define other combinations and their messages as needed
+            # You can also define messages for single or two-category combinations
+        }
+
+        # Get the top categories, excluding None and replacing it with 'none'
+        top_categories = tuple(category if category else 'none' for category, _ in most_common)
+
+        st.write("")  # Adding a space before the custom advice section
+
+        # Display the specific message for the top combination
+        if top_categories in combination_messages:
+            message = combination_messages[top_categories]
+            st.subheader("Custom Advice Based on Your Top Categories:")
+            st.write(message)
         else:
-            # All questions answered, calculate and display the results
-            counts = Counter(st.session_state.answers)
-            most_common = counts.most_common(3)
+            st.write("No specific advice for this combination.")
 
-            # Ensure there are always three categories (pad with None or a default category if less than three)
-            most_common += [(None, None)] * (3 - len(most_common))
-
-            # Display the most common RAISEC categories
-            st.subheader("Your Top 3 RAISEC Categories:")
-            for category, count in most_common:
-                if category:
-                    st.write(f"{category}: {count}")
-
-            # Define specific messages for combinations of top 3 RAISEC categories
-            combination_messages = {
-                ('R', 'A', 'I'): "Message for combination R, A, I.",
-                ('R', 'none', 'none'): "You are part of society R",
-                # Define other combinations and their messages as needed
-                # You can also define messages for single or two-category combinations
-            }
-
-            # Get the top categories, excluding None
-            top_categories = tuple(category for category, count in most_common if category)
-
-            st.write("")  # Adding a space before the custom advice section
-
-            # Display the specific message for the top combination
-            if top_categories in combination_messages:
-                message = combination_messages[top_categories]
-                st.subheader("Custom Advice Based on Your Top Categories:")
-                st.write(message)
-            else:
-                st.write("No specific advice for this combination.")
+# The st.experimental_rerun() is moved inside the else block after displaying results and messages
