@@ -100,14 +100,14 @@ if st.session_state.current_question < len(
 
 
 # Function to get a unique message based on the total score
-def get_message_for_score(score):
-    if score <= 35:
-        return "Your working style is highly independent and proactive."
-    elif score <= 70:
-        return "Your working style is independent with a preference for occasional collaboration."
-    elif score <= 105:
-        return "Your working style balances independence and teamwork."
-    elif score <= 140:
+#def get_message_for_score(score):
+    #if score <= 35:
+     #   return "Your working style is highly independent and proactive."
+    #elif score <= 70:
+     #   return "Your working style is independent with a preference for occasional collaboration."
+    #elif score <= 105:
+     #   return "Your working style balances independence and teamwork."
+    #elif score <= 140:
         return "Your working style leans towards collaboration, with some preference for independence."
     elif score <= 175:
         return "Your working style is highly collaborative, preferring teamwork over working alone."
