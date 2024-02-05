@@ -46,11 +46,13 @@ st.session_state.setdefault('answers', [0] * len(questions))
 # Title of the app
 st.title('Working Style Assessment')
 
-# Function to calculate the working style score
 def calculate_working_style_score(answers):
-    total_score = sum(answers)  
-    # Sum the values of the answers
-    return total_score
+    results = {"Not at all typical of you": 0, "Rarely typical of you": 0, "Occasionally typical of you": 0, "Sometimes typical of you": 0, "Often typical of you": 0, "Usually typical of you": 0, "Very typical of you at work": 0}
+    for answer in answers:
+        # Directly map answer to working_style
+        if answer in options:
+            results[options[answer]] += 1
+    return results
 
 # Define a callback function to handle the "Next" button click
 def handle_next():
