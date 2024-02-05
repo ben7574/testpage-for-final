@@ -11,9 +11,9 @@ def analyze_responses(responses):
         "Analytical Style": [0, 0, 0, 0, 0]
     }
 
-    for i in range(len(responses)):
-        for j in range(len(responses[i])):
-            working_styles[list(working_styles.keys())[i]][j] = responses[i][j]
+    for response in responses:
+        for i in range(len(response)):
+            working_styles[list(working_styles.keys())[i]][response[i]] += 1
 
     total_scores = {}
     for style, scores in working_styles.items():
@@ -24,7 +24,7 @@ def analyze_responses(responses):
     return total_scores, best_style
 
 def display_question(question):
-    return st.radio(question,
+    return st.radio("Question:", question,
                     options=["Not at all typical of you",
                              "Rarely typical of you",
                              "Occasionally typical of you",
@@ -83,10 +83,9 @@ def main():
     responses = []
 
     for i in range(len(questions)):
-        placeholder = st.empty()
+        st.write(f"Question {i+1}/{len(questions)}")
         response = display_question(questions[i])
         responses.append(response)
-        placeholder.empty()
 
     st.write("Thank you for completing the questionnaire!")
 
