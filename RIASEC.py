@@ -58,7 +58,6 @@ option_to_raisec = {
     "Disagree": "E",
     "Strongly Disagree": "C"
 }
-# ... (your questions, options, and option_to_raisec remain the same)
 
 # Initialize the session state
 if 'current_question' not in st.session_state:
@@ -101,7 +100,7 @@ if submitted:
         # Define specific messages for combinations of top 3 RAISEC categories
         combination_messages = {
             ('R', 'A', 'I'): "Message for combination R, A, I.",
-            ('R','none','none'): "you are part of society R",
+            ('R', 'none', 'none'): "You are part of society R",
             # Define other combinations and their messages as needed
             # You can also define messages for single or two-category combinations
         }
@@ -119,3 +118,4 @@ if submitted:
             
     # Ensure the script reruns on form submission
     st.experimental_rerun()
+
