@@ -82,27 +82,30 @@ st.session_state.setdefault('answers', [0] * len(questions))
 # Title of the app
 st.title('RAISEC Assessment')
 
-# Display questions and get answers
-for i, question in enumerate(questions):
-    if i < len(questions) - 1:
-        st.write(f"Question {i + 1}: {question}")
-        answer = st.radio("Choose an option:", list(options.keys()), format_func=lambda x: options[x])
-        st.session_state.answers[i] = answer
-        st.write("---")
-    else:
-        # Last question
-        st.write(f"Question {i + 1}: {question}")
-        answer = st.radio("Choose an option:", list(options.keys()), format_func=lambda x: options[x])
-        st.session_state.answers[i] = answer
-        st.write("---")
-        st.write("Thank you for completing the assessment. Click the button below to view your results.")
+# Display only the current question
+current_q_and_o = questions_and_options[st.session_state.current_question]
+question = current_q_and_o["question"]
 
-# Define a button to display the results
-if st.button("View Results"):
-    result = calculate_raisec_style(st.session_state.answers)
-    st.subheader("Your RAISEC result:")
-    for style, count in result.items():
-        st.write(f"{style}: {count}")
+# Use a form to ensure answers are submitted before moving to the next question
+with st.form(key=f'question_{st.session_state.current_question}'):
+    st.session_state.answers[st.session_state.current_question] = st.radio(
+        question, 
+        list(options.keys()), 
+        format_func=lambda x: options[x]
+    )
+     submitted = st.form_submit_button('Next')
+
+    if submitted:
+        if st.session_state.current_question < len(questions_and_options) - 1:
+            # Move to the next question
+            st.session_state.current_question += 1
+        else:
+            # Calculate and display the results after the last question
+            result = calculate_raisec_style(st.session_state.answers)
+            st.subheader("Your RIASEC Test result says:")
+            for style, count in result.items():
+                st.write(f"{style}: {count}")
+
 
     # Sort the RAISEC styles by count in descending order
     sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
@@ -111,6 +114,12 @@ if st.button("View Results"):
     top_styles = sorted_styles[:3]
 
     message = f"You have the highest counts in: {', '.join([f'{style[0]} ({style[1]} counts)' for style in top_styles])}."
-    
+
+ # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
+            # For example:
+            if top_style[0] == "R" and second_top_style[0] == "A" and third_top_style[0] == "S":
+                message += " This allows you to study Law."
+            # Add more conditions as needed for other combinations
+
     st.subheader("Custom Career Advice Based on RAISEC TEST:")
     st.write(message)
