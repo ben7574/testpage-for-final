@@ -63,15 +63,19 @@ def handle_next():
         display_results()
 
 # Function to display the current question
+# Function to display the current question
 def display_question():
     question = questions[st.session_state.current_question]
+    # Generate a unique key for the form using the current question index
+    form_key = f'question_{st.session_state.current_question}'
     # Display the question and radio buttons for options
-    with st.form(key=f'question_{st.session_state.current_question}'):
+    with st.form(key=form_key):
         answer = st.radio(question, list(options.keys()), format_func=lambda x: options[x])
         submitted = st.form_submit_button('Next', on_click=handle_next)
         if submitted:
             # Store the selected answer
             st.session_state.answers[st.session_state.current_question] = answer
+
 
 # Function to display results
 def display_results():
