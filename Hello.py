@@ -63,7 +63,6 @@ def handle_next():
         display_results()
 
 # Function to display the current question
-# Function to display the current question
 def display_question():
     question = questions[st.session_state.current_question]
     # Generate a unique key for the form using the current question index
@@ -75,7 +74,6 @@ def display_question():
         if submitted:
             # Store the selected answer
             st.session_state.answers[st.session_state.current_question] = answer
-
 
 # Function to display results
 def display_results():
