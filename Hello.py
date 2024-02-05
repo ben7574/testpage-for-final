@@ -29,17 +29,14 @@ questions = [
 ]
 
 # Options (the same for each question)
-options = { "Not at all typical of you", "Rarely typical of you", "Occasionally typical of you", "Sometimes typical of you", "Often typical of you", "Usually typical of you", "Very typical of you at work"}
-
-# Mapping from options to RAISEC categories
-option_to_working_style = {   
-       "Not at all typical of you": 0,
-       "Rarely typical of you": 1,
-       "Occasionally typical of you": 2,
-       "Sometimes typical of you": 3,
-       "Often typical of you": 4,
-       "Usually typical of you": 5,
-       "Very typical of you at work": 6
+options = {
+    1: "Not at all typical of you",
+    2: "Rarely typical of you",
+    3: "Occasionally typical of you",
+    4: "Sometimes typical of you",
+    5: "Often typical of you",
+    6: "Usually typical of you",
+    7: "Very typical of you at work"
 }
 
 # Initialize session state
@@ -99,10 +96,8 @@ def display_results():
     st.write(message)
 
 # Check if all questions have been answered and show the results
-if st.session_state.current_question < len(questions):
-    display_question()
-else:
-    display_results()
+if st.session_state.current_question < len(
+
 
 # Function to get a unique message based on the total score
 def get_message_for_score(score):
