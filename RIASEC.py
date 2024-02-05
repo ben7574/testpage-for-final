@@ -93,7 +93,7 @@ with st.form(key=f'question_{st.session_state.current_question}'):
         list(options.keys()), 
         format_func=lambda x: options[x]
     )
-     submitted = st.form_submit_button('Next')
+    submitted = st.form_submit_button('Next')
 
     if submitted:
         if st.session_state.current_question < len(questions_and_options) - 1:
