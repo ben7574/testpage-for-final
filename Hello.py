@@ -27,6 +27,7 @@ questions = [
     "I make sure that I have crossed all the ’t’s and dotted all the 'i's.",
     "I produce work with no mistakes in it."
 ]
+
 # Options (the same for each question)
 options = {
     1: "Not at all typical of you",
@@ -38,46 +39,38 @@ options = {
     7: "Very typical of you at work"
 }
 
+# Initialize session state
+st.session_state.setdefault('current_question', 0)
+st.session_state.setdefault('answers', [0] * len(questions))
+
+# Title of the app
+st.title('Working Style Assessment')
+
 # Function to calculate the working style score
 def calculate_working_style_score(answers):
     total_score = sum(answers)  
     # Sum the values of the answers
     return total_score
 
-
-# Initialize session state
-st.session_state.setdefault('current_question', 0)
-st.session_state.setdefault('answers', [0] * len(questions))
-
-# Define a callback function to increment the current question or display results
+# Define a callback function to handle the "Next" button click
 def handle_next():
     # Increment the current question index or calculate and display the results
     if st.session_state.current_question < len(questions) - 1:
         st.session_state.current_question += 1
+        display_question()
     else:
-        # Display results if it's the last question
+        # All questions answered, calculate and display the results
         display_results()
 
-
-
-# Title of the app
-st.title('Working Style Assessment')
-
-# Display only the current question
-if st.session_state.current_question < len(questions):
+# Function to display the current question
+def display_question():
     question = questions[st.session_state.current_question]
-
-    # Use a form to ensure answers are submitted before moving to the next question
+    # Display the question and radio buttons for options
     with st.form(key=f'question_{st.session_state.current_question}'):
-        answer = st.radio(
-            question, 
-            list(options.keys()), 
-            format_func=lambda x: options[x]
-        )
+        answer = st.radio(question, list(options.keys()), format_func=lambda x: options[x])
         submitted = st.form_submit_button('Next', on_click=handle_next)
-        
         if submitted:
-            # Store the answer
+            # Store the selected answer
             st.session_state.answers[st.session_state.current_question] = answer
 
 # Function to display results
@@ -92,7 +85,9 @@ def display_results():
     st.write(message)
 
 # Check if all questions have been answered and show the results
-if st.session_state.current_question == len(questions):
+if st.session_state.current_question < len(questions):
+    display_question()
+else:
     display_results()
 
 # Function to get a unique message based on the total score
@@ -109,4 +104,3 @@ def get_message_for_score(score):
         return "Your working style is highly collaborative, preferring teamwork over working alone."
     else:
         return "Unique message for your score range or an error message if the score is out of expected range."
-
