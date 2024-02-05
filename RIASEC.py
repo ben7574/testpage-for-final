@@ -88,6 +88,24 @@ def handle_next():
         # Display results if it's the last question
         display_results()
 
+# Function to display the RAISEC test results
+def display_results():
+    result = calculate_raisec_style(st.session_state.answers)
+    st.subheader("Your RAISEC result:")
+    for style, count in result.items():
+        st.write(f"{style}: {count}")
+
+    # Sort the RAISEC styles by count in descending order
+    sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
+
+    # Extract the top three RAISEC styles
+    top_styles = sorted_styles[:3]
+
+    message = f"You have the highest counts in: {', '.join([f'{style[0]} ({style[1]} counts)' for style in top_styles])}."
+    
+    st.subheader("Custom Career Advice Based on RAISEC TEST:")
+    st.write(message)
+
 # Title of the app
 st.title('RAISEC Assessment')
 
@@ -110,26 +128,4 @@ if st.session_state.current_question < len(questions):
                 st.session_state.current_question += 1
             else:
                 # Calculate and display the results after the last question
-                result = calculate_raisec_style(st.session_state.answers)
-                st.subheader("Your RAISEC result:")
-                for style, count in result.items():
-                    st.write(f"{style}: {count}")
-
-                # Sort the RAISEC styles by count in descending order
-                sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
-
-                # Extract the top three RAISEC styles
-                top_styles = sorted_styles[:3]
-
-                message = f"You have the highest counts in: {', '.join([f'{style[0]} ({style[1]} counts)' for style in top_styles])}."
-                
-                # Add more conditions as needed for other combinations
-
-                st.subheader("Custom Career Advice Based on RAISEC TEST:")
-                st.write(message)
-
-# Function to get a unique message based on the RAISEC test result
-def get_message_for_score(top_styles):
-    # Customize the message based on the top RAISEC styles
-    message = "Custom message based on the top RAISEC styles."
-    return message
+                display_results()
