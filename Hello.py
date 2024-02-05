@@ -24,15 +24,14 @@ def analyze_responses(responses):
     return total_scores, best_style
 
 def display_question(question):
-    response = st.radio(question['text'],
-                        options=["Not at all typical of you",
-                                 "Rarely typical of you",
-                                 "Occasionally typical of you",
-                                 "Sometimes typical of you",
-                                 "Often typical of you",
-                                 "Usually typical of you",
-                                 "Very typical of you at work"], index=3)
-    return response
+    return st.radio(question,
+                    options=["Not at all typical of you",
+                             "Rarely typical of you",
+                             "Occasionally typical of you",
+                             "Sometimes typical of you",
+                             "Often typical of you",
+                             "Usually typical of you",
+                             "Very typical of you at work"], index=3)
 
 def main():
     st.title("Working Style Questionnaire")
@@ -44,48 +43,50 @@ def main():
     st.write("There is no right or wrong answer. Use the full extent of the scale, answer each question honestly and as you feel or see yourself at work.")
 
     questions = [
-        {"number": 1, "text": "How do you approach working independently on projects or tasks?"},
-        {"number": 2, "text": "How do you set goals and objectives for yourself?"},
-        {"number": 3, "text": "How do you prioritize your tasks and manage your workload?"},
-        {"number": 4, "text": "How do you handle challenges or obstacles when working independently?"},
-        {"number": 5, "text": "How do you stay motivated and committed to achieving your goals?"},
-        {"number": 6, "text": "How do you offer support and encouragement to your peers?"},
-        {"number": 7, "text": "How do you respond when someone asks for help or assistance?"},
-        {"number": 8, "text": "How do you contribute to a positive and inclusive team environment?"},
-        {"number": 9, "text": "How do you handle feedback or constructive criticism from others?"},
-        {"number": 10, "text": "How do you prioritize the well-being and needs of others in your team or group?"},
-        {"number": 11, "text": "How do you take charge in group settings or team projects?"},
-        {"number": 12, "text": "How do you set goals and objectives for yourself or others?"},
-        {"number": 13, "text": "How do you make decisions when faced with uncertainty or ambiguity?"},
-        {"number": 14, "text": "How do you motivate yourself and others to achieve goals?"},
-        {"number": 15, "text": "How do you handle challenges or setbacks in your projects or tasks?"},
-        {"number": 16, "text": "How do you approach solving creative or open-ended problems?"},
-        {"number": 17, "text": "How do you respond to unexpected changes or disruptions?"},
-        {"number": 18, "text": "How do you generate new ideas or approaches to tasks?"},
-        {"number": 19, "text": "How do you handle ambiguity or uncertainty?"},
-        {"number": 20, "text": "How do you approach projects or tasks that require outside-the-box thinking?"},
-        {"number": 21, "text": "How do you collaborate with peers on group projects?"},
-        {"number": 22, "text": "How do you handle conflicts or disagreements with peers?"},
-        {"number": 23, "text": "How do you build relationships with classmates or colleagues?"},
-        {"number": 24, "text": "How do you communicate your ideas or thoughts to others?"},
-        {"number": 25, "text": "How do you contribute to group discussions or activities?"},
-        {"number": 26, "text": "How do you organize your tasks or assignments?"},
-        {"number": 27, "text": "How do you manage your time effectively?"},
-        {"number": 28, "text": "How do you handle multiple tasks or projects simultaneously?"},
-        {"number": 29, "text": "How do you ensure your work is thorough and accurate?"},
-        {"number": 30, "text": "How do you approach long-term assignments or projects?"},
-        {"number": 31, "text": "How do you approach solving a problem?"},
-        {"number": 32, "text": "How do you feel about working with data or numbers?"},
-        {"number": 33, "text": "How do you handle complex tasks or assignments?"},
-        {"number": 34, "text": "When making decisions, what is your approach?"},
-        {"number": 35, "text": "How do you respond to challenges or obstacles?"}
+        "How do you approach working independently on projects or tasks?",
+        "How do you set goals and objectives for yourself?",
+        "How do you prioritize your tasks and manage your workload?",
+        "How do you handle challenges or obstacles when working independently?",
+        "How do you stay motivated and committed to achieving your goals?",
+        "How do you offer support and encouragement to your peers?",
+        "How do you respond when someone asks for help or assistance?",
+        "How do you contribute to a positive and inclusive team environment?",
+        "How do you handle feedback or constructive criticism from others?",
+        "How do you prioritize the well-being and needs of others in your team or group?",
+        "How do you take charge in group settings or team projects?",
+        "How do you set goals and objectives for yourself or others?",
+        "How do you make decisions when faced with uncertainty or ambiguity?",
+        "How do you motivate yourself and others to achieve goals?",
+        "How do you handle challenges or setbacks in your projects or tasks?",
+        "How do you approach solving creative or open-ended problems?",
+        "How do you respond to unexpected changes or disruptions?",
+        "How do you generate new ideas or approaches to tasks?",
+        "How do you handle ambiguity or uncertainty?",
+        "How do you approach projects or tasks that require outside-the-box thinking?",
+        "How do you collaborate with peers on group projects?",
+        "How do you handle conflicts or disagreements with peers?",
+        "How do you build relationships with classmates or colleagues?",
+        "How do you communicate your ideas or thoughts to others?",
+        "How do you contribute to group discussions or activities?",
+        "How do you organize your tasks or assignments?",
+        "How do you manage your time effectively?",
+        "How do you handle multiple tasks or projects simultaneously?",
+        "How do you ensure your work is thorough and accurate?",
+        "How do you approach long-term assignments or projects?",
+        "How do you approach solving a problem?",
+        "How do you feel about working with data or numbers?",
+        "How do you handle complex tasks or assignments?",
+        "When making decisions, what is your approach?",
+        "How do you respond to challenges or obstacles?"
     ]
 
     responses = []
 
-    for question in questions:
-        response = display_question(question)
+    for i in range(len(questions)):
+        placeholder = st.empty()
+        response = display_question(questions[i])
         responses.append(response)
+        placeholder.empty()
 
     st.write("Thank you for completing the questionnaire!")
 
