@@ -24,14 +24,13 @@ def analyze_responses(responses):
     return total_scores, best_style
 
 def display_question(question):
-    return st.radio("Question:", question,
-                    options=["Not at all typical of you",
-                             "Rarely typical of you",
-                             "Occasionally typical of you",
-                             "Sometimes typical of you",
-                             "Often typical of you",
-                             "Usually typical of you",
-                             "Very typical of you at work"], index=3)
+    return st.radio("Question:", ["Not at all typical of you",
+                                  "Rarely typical of you",
+                                  "Occasionally typical of you",
+                                  "Sometimes typical of you",
+                                  "Often typical of you",
+                                  "Usually typical of you",
+                                  "Very typical of you at work"], index=3)
 
 def main():
     st.title("Working Style Questionnaire")
