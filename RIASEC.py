@@ -119,4 +119,7 @@ if submitted:
         else:
             st.write("No specific advice for this combination.")
 
+ # Prevent further execution
+            st.stop()
+
 # The st.experimental_rerun() is moved inside the else block after displaying results and messages
