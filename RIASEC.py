@@ -117,8 +117,8 @@ with st.form(key=f'question_{st.session_state.current_question}'):
 
  # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
             # For example:
-        if top_style[0] == "R" and second_top_style[0] == "A" and third_top_style[0] == "S":
-                message += " This allows you to study Law."
+    if top_style[0] == "R" and second_top_style[0] == "A" and third_top_style[0] == "S":
+         message += " This allows you to study Law."
             # Add more conditions as needed for other combinations
 
     st.subheader("Custom Career Advice Based on RAISEC TEST:")
