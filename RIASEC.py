@@ -45,81 +45,70 @@ questions = [
     "I like to draw",
     "I like to give speeches"
 ]
+# Define the options
+options = ["Strongly Agree", "Agree", "Somewhat Agree", "Somewhat Disagree", "Disagree", "Strongly Disagree"]
 
-# Options (the same for each question)
-options = {
-    1: "Strongly Agree",
-    2: "Agree",
-    3: "Somewhat Agree", 
-    4: "Somewhat Disagree", 
-    5: "Disagree",
-    6: "Strongly Disagree"
+# Mapping from options to RAISEC categories
+option_to_raisec = {
+    "Strongly Agree": "R",
+    "Agree": "A",
+    "Somewhat Agree": "I",
+    "Somewhat Disagree": "S",
+    "Disagree": "E",
+    "Strongly Disagree": "C"
 }
 
-# To assign a value to each of the options
-raisec_style = {
-    1: "R",
-    2: "A",
-    3: "I",
-    4: "S",
-    5: "E",
-    6: "C"
-}
-
-# Function to calculate the RAISEC score
-def calculate_raisec_style(answers):
-    results = {"R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0}
-    for answer in answers:
-        # Directly map answer to RAISEC test
-        if answer in raisec_style:
-            results[raisec_style[answer]] += 1
-    return results
-
-# Initialize session state
-st.session_state.setdefault('current_question', 0)
-st.session_state.setdefault('answers', [0] * len(questions))
+# Initialize the session state
+if 'current_question' not in st.session_state:
+    st.session_state.current_question = 0
+if 'answers' not in st.session_state:
+    st.session_state.answers = []
 
 # Title of the app
 st.title('RAISEC Assessment')
 
-# Display only the current question
-current_q_and_o = questions_and_options[st.session_state.current_question]
-question = current_q_and_o["question"]
+# Display the current question
+question = questions[st.session_state.current_question]
 
 # Use a form to ensure answers are submitted before moving to the next question
 with st.form(key=f'question_{st.session_state.current_question}'):
-    st.session_state.answers[st.session_state.current_question] = st.radio(
-        question, 
-        list(options.keys()), 
-        format_func=lambda x: options[x]
-    )
+    choice = st.radio(question, options)
     submitted = st.form_submit_button('Next')
 
-    if submitted:
-        if st.session_state.current_question < len(questions_and_options) - 1:
-            # Move to the next question
-            st.session_state.current_question += 1
+if submitted:
+    # Record the answer
+    st.session_state.answers.append(option_to_raisec[choice])
+
+    if st.session_state.current_question < len(questions) - 1:
+        # Move to the next question
+        st.session_state.current_question += 1
+    else:
+        # All questions answered, calculate and display the results
+        from collections import Counter
+        counts = Counter(st.session_state.answers)
+        most_common = counts.most_common(3)
+
+        # Display the most common RAISEC categories
+        st.subheader("Your Top 3 RAISEC Categories:")
+        for category, count in most_common:
+            st.write(f"{category}: {count}")
+
+        # Define specific messages for combinations of top 3 RAISEC categories
+        combination_messages = {
+            ('R', 'A', 'I'): "Message for combination R, A, I.",
+            # Define other combinations and their messages as needed
+        }
+
+        # Get the top 3 categories as a tuple
+        top_categories = tuple([category for category, count in most_common])
+
+        # Display the specific message for the top 3 combination
+        if top_categories in combination_messages:
+            message = combination_messages[top_categories]
+            st.subheader("Custom Advice:")
+            st.write(message)
         else:
-            # Calculate and display the results after the last question
-            result = calculate_raisec_style(st.session_state.answers)
-            st.subheader("Your RIASEC Test result says:")
-            for style, count in result.items():
-                st.write(f"{style}: {count}")
+            st.write("No specific advice for this combination.")
 
-
-    # Sort the RAISEC styles by count in descending order
-    sorted_styles = sorted(result.items(), key=lambda x: x[1], reverse=True)
-
-    # Extract the top three RAISEC styles
-    top_styles = sorted_styles[:3]
-
-    message = f"You have the highest counts in: {', '.join([f'{style[0]} ({style[1]} counts)' for style in top_styles])}."
-
- # You can add more specific advice or career guidance based on top_style[0] and second_top_style[0]
-            # For example:
-    if top_style[0] == "R" and second_top_style[0] == "A" and third_top_style[0] == "S":
-         message += " This allows you to study Law."
-            # Add more conditions as needed for other combinations
-
-    st.subheader("Custom Career Advice Based on RAISEC TEST:")
-    st.write(message)
+    # Ensure the script reruns on form submission
+    st.experimental_rerun()
