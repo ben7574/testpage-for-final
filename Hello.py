@@ -40,41 +40,49 @@ options = {
     7: "Very typical of you at work"
 }
 
+import streamlit as st
+
+# ... [Other parts of your code] ...
+
 # Initialize session state
-st.session_state.setdefault('current_question', 0)
-st.session_state.setdefault('answers', [0] * len(questions))
+if 'current_question' not in st.session_state:
+    st.session_state.current_question = 0
+if 'answers' not in st.session_state:
+    st.session_state.answers = [0] * len(questions)
 
 # Title of the app
 st.title('Working Style Assessment')
 
-# Function to calculate the working style score
-def calculate_working_style_score(answers):
-    total_score = sum(answers)  
-    # Sum the values of the answers
-    return total_score
-
-# Define a callback function to handle the "Next" button click
-def handle_next():
-    # Increment the current question index or calculate and display the results
-    if st.session_state.current_question < len(questions) - 1:
-        st.session_state.current_question += 1
-        display_question()
-    else:
-        # All questions answered, calculate and display the results
-        display_results()
-
-# Function to display the current question
-def display_question():
+# Display the current question
+if st.session_state.current_question < len(questions):
     question = questions[st.session_state.current_question]
-    # Generate a unique key for the form using the current question index
-    form_key = f'question_{st.session_state.current_question}'
-    # Display the question and radio buttons for options
+    form_key = f'question_form_{st.session_state.current_question}'  # Unique key for each form
     with st.form(key=form_key):
-        answer = st.radio(question, list(options.keys()), format_func=lambda x: options[x])
-        submitted = st.form_submit_button('Next', on_click=handle_next)
+        st.write(question)
+        # Display the options as radio buttons
+        selected_option = st.radio("Select an option:", list(options.values()), key=f'option_{st.session_state.current_question}')
+        # When the 'Next' button is clicked, the form is submitted
+        submitted = st.form_submit_button('Next')
         if submitted:
-            # Store the selected answer
-            st.session_state.answers[st.session_state.current_question] = answer
+            # Save the selected option's score (assuming the options are 1-indexed)
+            score = list(options.keys())[list(options.values()).index(selected_option)]
+            st.session_state.answers[st.session_state.current_question] = score
+            # Move to the next question
+            if st.session_state.current_question < len(questions) - 1:
+                st.session_state.current_question += 1
+            else:
+                # If it's the last question, calculate and display the results
+                total_scores, best_style = analyze_responses(st.session_state.answers)
+                st.write("### Total Scores:")
+                for style, score in total_scores.items():
+                    st.write(f"{style}: {score}")
+                st.write("### Best Working Style:")
+                st.write(f"The best working style for you is: **{best_style}**")
+                # Display the custom message based on the best style
+                # ... [Your logic for displaying the custom message]
+
+# ... [Rest of your code] ...
+
 
 # Function to display results
 def display_results():
