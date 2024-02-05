@@ -108,14 +108,15 @@ if submitted:
         # Get the top categories, excluding None
         top_categories = tuple(category for category, count in most_common if category)
 
+        st.write("")  # Adding a space before the custom advice section
+
         # Display the specific message for the top combination
         if top_categories in combination_messages:
             message = combination_messages[top_categories]
-            st.subheader("Custom Advice:")
+            st.subheader("Custom Advice Based on Your Top Categories:")
             st.write(message)
         else:
             st.write("No specific advice for this combination.")
             
     # Ensure the script reruns on form submission
     st.experimental_rerun()
-
