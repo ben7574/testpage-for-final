@@ -1,4 +1,5 @@
 import streamlit as st
+from collections import Counter
 
 questions = [
     "I prefer to work by myself most of the time.",
@@ -57,6 +58,7 @@ option_to_raisec = {
     "Disagree": "E",
     "Strongly Disagree": "C"
 }
+# ... (your questions, options, and option_to_raisec remain the same)
 
 # Initialize the session state
 if 'current_question' not in st.session_state:
@@ -84,31 +86,35 @@ if submitted:
         st.session_state.current_question += 1
     else:
         # All questions answered, calculate and display the results
-        from collections import Counter
         counts = Counter(st.session_state.answers)
         most_common = counts.most_common(3)
+
+        # Ensure there are always three categories (pad with None or a default category if less than three)
+        most_common += [(None, None)] * (3 - len(most_common))
 
         # Display the most common RAISEC categories
         st.subheader("Your Top 3 RAISEC Categories:")
         for category, count in most_common:
-            st.write(f"{category}: {count}")
+            if category:
+                st.write(f"{category}: {count}")
 
         # Define specific messages for combinations of top 3 RAISEC categories
         combination_messages = {
             ('R', 'A', 'I'): "Message for combination R, A, I.",
             # Define other combinations and their messages as needed
+            # You can also define messages for single or two-category combinations
         }
 
-        # Get the top 3 categories as a tuple
-        top_categories = tuple([category for category, count in most_common])
+        # Get the top categories, excluding None
+        top_categories = tuple(category for category, count in most_common if category)
 
-        # Display the specific message for the top 3 combination
+        # Display the specific message for the top combination
         if top_categories in combination_messages:
             message = combination_messages[top_categories]
             st.subheader("Custom Advice:")
             st.write(message)
         else:
             st.write("No specific advice for this combination.")
-
+            
     # Ensure the script reruns on form submission
     st.experimental_rerun()
